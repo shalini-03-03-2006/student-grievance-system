@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Login</h2>
+<form method="POST">
+    <p>Email: <input type="email" name="email" required style="width: 300px; padding: 8px;"></p>
+    <p>Password: <input type="password" name="password" required style="width: 300px; padding: 8px;"></p>
+    <button class="btn" type="submit">Login</button>
+</form>
+<p><small>Admin: admin@college.edu / admin123<br>Cell: cell@college.edu / cell123</small></p>
+{% endblock %}

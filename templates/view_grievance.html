@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+    
+    <!-- HEADER -->
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #2c3e50; margin-bottom: 10px;">Grievance #{{ grievance[0] }}</h1>
+        <div style="background: #e3f2fd; padding: 15px 25px; border-radius: 25px; display: inline-block;">
+            <strong>Status:</strong> 
+            <span class="status {{ grievance[5] }}" style="padding: 10px 20px; border-radius: 25px; font-size: 18px; font-weight: bold;">
+                {{ grievance[5]|replace('-', ' ')|title }}
+            </span>
+        </div>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div style="display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+        <div style="flex: 1; background: #e8f5e8; padding: 20px; border-radius: 10px; text-align: center;">
+            <strong style="color: #2e7d32; font-size: 24px;">{{ grievance[3]|title }}</strong><br>
+            <small style="color: #666;">Category</small>
+        </div>
+        <div style="flex: 1; background: #fff3cd; padding: 20px; border-radius: 10px; text-align: center;">
+            {% if grievance[6] == 'high' %}
+                <strong style="color: #e74c3c; font-size: 24px;">🔥 High</strong>
+            {% elif grievance[6] == 'medium' %}
+                <strong style="color: #f39c12; font-size: 24px;">⚡ Medium</strong>
+            {% else %}
+                <strong style="color: #27ae60; font-size: 24px;">📋 Low</strong>
+            {% endif %}<br>
+            <small style="color: #666;">Priority</small>
+        </div>
+        <div style="flex: 1; background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
+            <strong style="color: #495057; font-size: 20px;">{{ grievance[10][:10] if grievance[10] else 'N/A' }}</strong><br>
+            <small style="color: #666;">Submitted</small>
+        </div>
+    </div>
+
+    <!-- ANONYMOUS NOTICE -->
+    {% if grievance[4] == 1 %}
+        <div style="background: linear-gradient(90deg, #fff3cd, #ffeaa7); padding: 15px 20px; border-radius: 10px; 
+                    border-left: 5px solid #ffc107; margin-bottom: 25px;">
+            <strong style="color: #856404;">🕵️ Anonymous Submission</strong> 
+            <span style="color: #666;">- Your identity is protected</span>
+        </div>
+    {% endif %}
+
+    <!-- GRIEVANCE DETAILS -->
+    <div style="margin-bottom: 30px;">
+        <h3 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">📋 Grievance Details</h3>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; border-left: 5px solid #3498db;">
+            <p><strong style="color: #2c3e50;">Title:</strong> {{ grievance[1] }}</p>
+        </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div style="margin-bottom: 30px;">
+        <h3 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px;">📝 Description</h3>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; border-left: 5px solid #6c757d; 
+                    line-height: 1.7; white-space: pre-wrap; font-size: 16px;">
+            {{ grievance[2] }}
+        </div>
+    </div>
+
+    <!-- 🔥 RESOLUTION - SHOWS ONLY WHEN RESOLUTION EXISTS (Index 9) -->
+    {% if grievance[9] and grievance[9].strip() != '' %}
+        <div style="margin-bottom: 30px;">
+            <h3 style="color: #27ae60; border-bottom: 3px solid #27ae60; padding-bottom: 10px;">✅ Resolution Details</h3>
+            <div style="background: linear-gradient(135deg, #d4edda, #c8e6c9); padding: 25px; border-radius: 15px; 
+                        border-left: 6px solid #27ae60; box-shadow: 0 4px 15px rgba(39,174,96,0.3);">
+                <div style="font-size: 16px; line-height: 1.7; color: #1b5e20;">
+                    <strong style="font-size: 18px;">📋 Resolution Reason:</strong><br><br>
+                    {{ grievance[9] }}
+                </div>
+                {% if grievance[11] %}
+                    <div style="margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.7); 
+                                border-radius: 8px; text-align: center;">
+                        <strong style="color: #2e7d32;">📅 Resolved on: {{ grievance[11][:10] }}</strong>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% elif grievance[5] in ['resolved', 'closed'] %}
+        <div style="margin-bottom: 30px; background: #fff3cd; padding: 20px; border-radius: 10px; 
+                    border-left: 5px solid #ffc107;">
+            <h4 style="color: #856404;">ℹ️ Status Updated</h4>
+            <p style="color: #665d03;">Grievance marked as <strong>{{ grievance[5]|title }}</strong> but no resolution details provided.</p>
+        </div>
+    {% endif %}
+
+    <!-- ACTION BUTTONS -->
+    <div style="text-align: center; padding-top: 30px; border-top: 2px solid #eee;">
+        {% if current_user.role == 'student' %}
+            <a href="{{ url_for('student_dashboard') }}" class="btn btn-success" style="font-size: 16px; padding: 15px 40px;">
+                ← Back to My Dashboard
+            </a>
+        {% else %}
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-danger" style="font-size: 16px; padding: 15px 40px;">
+                ← Admin Dashboard
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% if current_user.role == 'student' and grievance[5] in ['resolved', 'closed'] %}
+  <p>
+    <a href="{{ url_for('grievance_feedback', id=grievance[0]) }}">
+      Give feedback for this grievance
+    </a>
+  </p>
+{% endif %}
+
+
+<style>
+.status.pending { background: #fff3cd; color: #856404; }
+.status.resolved { background: #d4edda; color: #155724; }
+.status.under-review { background: #cce5ff; color: #004085; }
+.status.escalated { background: #fed7d7; color: #c53030; }
+.status.closed { background: #e2e8f0; color: #4a5568; }
+</style>
+{% endblock %}

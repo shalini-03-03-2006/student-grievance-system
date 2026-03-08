@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align: center; padding: 50px 20px;">
+    <h2 style="color: white; margin-bottom: 20px;">Choose Your Role</h2>
+    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+        <a href="{{ url_for('student_login') }}" class="btn btn-success" style="font-size: 24px; padding: 20px 40px;">👨‍🎓 Student Login</a>
+        <a href="{{ url_for('student_register') }}" class="btn" style="font-size: 18px; padding: 15px 30px;">New Student Register</a>
+        <a href="{{ url_for('admin_login') }}" class="btn btn-danger" style="font-size: 24px; padding: 20px 40px;">👨‍💼 Admin Login</a>
+    </div>
+    
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<div class="stats">
+    <div class="stat-card">
+        <h3>{{ pending }}</h3>
+        <p>Pending</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ unresolved }}</h3>
+        <p>Unresolved</p>
+    </div>
+</div>
+<table>
+    <tr>
+        <th>ID</th><th>Student</th><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Action</th>
+    </tr>
+    {% for g in grievances %}
+    <tr>
+        <td>#{{ g[0] }}</td>
+        <td>{{ g[7] or 'Anonymous' }}</td>
+        <td>{{ g[1][:40] }}</td>
+        <td>{{ g[3] }}</td>
+        <td><span class="status {{ g[5] }}">{{ g[5] }}</span></td>
+        <td>{{ g[10][:10] }}</td>
+        <td>
+            <form method="POST" action="{{ url_for('update_grievance', id=g[0]) }}" style="display: inline;">
+                <select name="status">
+                    <option value="pending">Pending</option>
+                    <option value="under-review">Under Review</option>
+                    <option value="resolved">Resolved</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <input type="text" name="resolution" placeholder="Resolution" style="width: 120px;">
+                <button class="btn" style="padding: 5px 10px;">Update</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

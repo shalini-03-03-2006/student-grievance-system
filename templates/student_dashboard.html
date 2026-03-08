@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h2>My Grievances</h2>
+    <a href="{{ url_for('submit_grievance') }}" class="btn btn-success">+ New Grievance</a>
+</div>
+<table>
+<tr>
+  <th>ID</th>
+  <th>Title</th>
+  <th>Category</th>
+  <th>Priority</th>
+  <th>Status</th>
+  <th>Submitted</th>
+  <th>View</th>
+  <th>Feedback</th>
+</tr>
+{% for g in grievances %}
+<tr>
+  <td>{{ g[0] }}</td>
+  <td>{{ g[1] }}</td>
+  <td>{{ g[3] }}</td>
+  <td>{{ g[6] }}</td>
+  <td>{{ g[5] }}</td>
+  <td>{{ g[10][:10] }}</td>
+  <td><a href="{{ url_for('view_grievance', id=g[0]) }}">View</a></td>
+  <td>
+    {% if g[5] in ['resolved', 'closed'] %}
+      <a href="{{ url_for('grievance_feedback', id=g[0]) }}">Give feedback</a>
+    {% else %}
+      -
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+
+   </table>
+{% endblock %}

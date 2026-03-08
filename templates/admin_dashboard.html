@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="margin-bottom: 30px;">
+    <h2>👨‍💼 Admin Dashboard</h2>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+</div>
+
+<!-- Stats Cards -->
+<div style="display: flex; gap: 20px; margin-bottom: 30px;">
+    <div style="flex: 1; background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 30px; border-radius: 15px; text-align: center;">
+        <h3 style="font-size: 2.5em;">{{ pending }}</h3>
+        <p>Pending Grievances</p>
+    </div>
+    <div style="flex: 1; background: linear-gradient(135deg, #feca57, #ff9ff3); color: white; padding: 30px; border-radius: 15px; text-align: center;">
+        <h3 style="font-size: 2.5em;">{{ unresolved }}</h3>
+        <p>Unresolved Cases</p>
+    </div>
+</div>
+
+<!-- All Grievances Table -->
+<h3>All Grievances ({{ grievances|length }})</h3>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Student</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for g in grievances %}
+        <tr>
+            <td><strong>#{{ g[0] }}</strong></td>
+            <td>{{ g[7] or 'Anonymous' }}</td>
+            <td>{{ g[1][:50] }}{% if g[1]|length > 50 %}...{% endif %}</td>
+            <td>
+                <span style="padding: 4px 12px; border-radius: 20px; background: #e3f2fd; color: #1976d2;">
+                    {{ g[3] }}
+                </span>
+            </td>
+            <td>
+                {% if g[6] == 'high' %}<span style="color: #e74c3c;">🔥 High</span>
+                {% elif g[6] == 'medium' %}<span style="color: #f39c12;">⚡ Medium</span>
+                {% else %}<span style="color: #27ae60;">📋 Low</span>{% endif %}
+            </td>
+            <td><span class="status {{ g[5] }}">{{ g[5] }}</span></td>
+            <td>{{ g[10][:10] if g[10] else 'N/A' }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('update_grievance', id=g[0]) }}" style="display: inline; white-space: nowrap;">
+                    <select name="status" style="padding: 5px; border-radius: 5px; margin-right: 5px;">
+                        <option value="pending" {% if g[5]=='pending' %}selected{% endif %}>Pending</option>
+                        <option value="under-review" {% if g[5]=='under-review' %}selected{% endif %}>Under Review</option>
+                        <option value="resolved" {% if g[5]=='resolved' %}selected{% endif %}>Resolved</option>
+                        <option value="escalated" {% if g[5]=='escalated' %}selected{% endif %}>Escalated</option>
+                        <option value="closed" {% if g[5]=='closed' %}selected{% endif %}>Closed</option>
+                    </select>
+                    <input type="text" name="resolution" placeholder="Resolution notes" style="width: 150px; padding: 5px; margin-right: 5px;">
+                    <button type="submit" class="btn" style="padding: 8px 12px; font-size: 14px;">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

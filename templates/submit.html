@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Submit New Grievance</h2>
+<form method="POST">
+    <p>Title: <input type="text" name="title" required style="width: 100%; padding: 8px;"></p>
+    <p>Category:
+        <select name="category" style="width: 200px; padding: 8px;">
+            <option value="academic">Academic</option>
+            <option value="administrative">Administrative</option>
+            <option value="hostel">Hostel</option>
+            <option value="examination">Examination</option>
+        </select>
+    </p>
+    <p>Priority:
+        <select name="priority" style="width: 150px; padding: 8px;">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <label><input type="checkbox" name="anonymous"> Anonymous</label>
+    </p>
+    <p>Description:</p>
+    <textarea name="description" rows="6" style="width: 100%; padding: 8px;" required></textarea>
+    <br><button class="btn btn-success" type="submit">Submit Grievance</button>
+</form>
+{% endblock %}
