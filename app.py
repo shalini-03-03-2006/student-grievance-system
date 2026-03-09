@@ -17,9 +17,9 @@ app.config.update(
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
     MAIL_USE_SSL=False,
-    MAIL_USERNAME='shalini13032006@gmail.com',   # use your Gmail
-    MAIL_PASSWORD='ffvvqpqhhamxwbpv',            # Gmail app password[web:72]
-    MAIL_DEFAULT_SENDER='baske14112007@gmail.com'
+    MAIL_USERNAME='abc@gmail.com',   # use your Gmail
+    MAIL_PASSWORD='abc',            # Gmail app password[web:72]
+    MAIL_DEFAULT_SENDER='abc@gmail.com'
 )
 mail = Mail(app)
 
@@ -510,3 +510,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
